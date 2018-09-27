@@ -1,0 +1,13 @@
+.Container {
+  margin: 2%;
+}
+
+.GameArea {
+  position: relative;
+  height: 600px;
+  width: 600px;
+  
+  /*border: 1px solid black;*/
+  background-color: lightgreen;
+
+}
