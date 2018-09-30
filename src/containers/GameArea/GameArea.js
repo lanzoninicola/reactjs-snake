@@ -9,8 +9,13 @@ import SimpleModalWrapped from '../../components/UI/Modal/Modal';
 class GameArea extends Component {
     state = {
         gameStatus: "idle",
-        showModal: false,
         foodPosition: [0, 0],
+        modal: {
+            show: false,
+            title: "",
+            subTitle: "",
+            btnLabel: ""
+        },
     }
 
     componentDidMount() {
@@ -47,15 +52,31 @@ class GameArea extends Component {
     }
 
     pauseGame = () => {
-        this.setState({ gameStatus: "paused", showModal: true })
+        this.setState({ 
+            gameStatus: "paused", 
+            modal: {
+                show: true,
+                title: "Game Paused",
+                subTitle: "What are you waiting for... Resume the game and enjoy!",
+                btnLabel: "Resume"
+            }
+        })
     }
 
     resumeGame = () => {
-        this.setState({ gameStatus: "started", showModal: false })
+        this.setState({ gameStatus: "started", show: false })
     }
 
     stopGame = () => {
-        this.setState({ gameStatus: "stopped" })
+        this.setState({ 
+            gameStatus: "stopped", 
+            modal: {
+                show: true,
+                title: "You are died",
+                subTitle: "Do not be frustated! Try again...",
+                btnLabel: "Resume"
+            }
+        })
     }
 
     getGridComposition() {
@@ -83,7 +104,7 @@ class GameArea extends Component {
 
     render() {
 
-        let { gameStatus, gameAreaInfo, foodPosition, showModal } = this.state;
+        let { gameStatus, gameAreaInfo, foodPosition, modal } = this.state;
 
         const btnSetAction = {
             start: this.startGame,
@@ -92,14 +113,26 @@ class GameArea extends Component {
         }
 
 
-        console.log(gameStatus, showModal);
-
         return (
             <div className={classes.Container}>
-                    {(gameStatus === "paused" && showModal === true) ?
+                    {(gameStatus === "paused" && modal.show === true) ?
                         <SimpleModalWrapped 
-                            showModal={showModal}
                             resumeGame={this.resumeGame}
+                            show={modal.show}
+                            title={modal.title}
+                            subTitle={modal.subTitle}
+                            btnLabel={modal.btnLabel}
+                            gameStatus={this.state.gameStatus}
+                        /> : null
+                    }
+                    {(gameStatus === "stopped" && modal.show === true) ?
+                        <SimpleModalWrapped 
+                            resumeGame={this.startGame}
+                            show={modal.show}
+                            title={modal.title}
+                            subTitle={modal.subTitle}
+                            btnLabel={modal.btnLabel}
+                            gameStatus={this.state.gameStatus}
                         /> : null
                     }
                     <Fragment>
