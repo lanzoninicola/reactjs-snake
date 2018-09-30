@@ -5,13 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50;
+  const left = 50;
 
   return {
     top: `${top}%`,
@@ -23,7 +19,7 @@ function getModalStyle() {
 const styles = theme => ({
   paper: {
     position: 'absolute',
-    width: theme.spacing.unit * 60,
+    width: theme.spacing.unit * 50,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
@@ -32,14 +28,11 @@ const styles = theme => ({
 
 class SimpleModal extends React.Component {
   state = {
-    open: this.props.showModal || false,
+    open: this.props.show || false,
   };
 
-   render() {
-    const { classes } = this.props;
-
-
-    console.log(this.state.open, this.props.showModal);
+  render() {
+    const { classes, title, subTitle, btnLabel, resumeGame } = this.props;
 
     return (
 
@@ -51,13 +44,17 @@ class SimpleModal extends React.Component {
           //onClose={this.handleClose}
         >
           <div style={getModalStyle()} className={classes.paper}>
-            <Typography variant="title" id="modal-title">
-              Game Paused
+            <Typography variant="title" id="modal-title" paragraph>
+              {title}
             </Typography>
-            <Typography variant="subheading" id="simple-modal-description">
-              What are you waiting for? Resume the game... and enjoy!
+            <Typography variant="subheading" id="simple-modal-description" paragraph>
+              {subTitle}
             </Typography>
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.props.resumeGame}>Resume</Button>
+            <div style={{ textAlign: 'center' }}>
+              <Button variant="contained" color="primary" className={classes.button} onClick={resumeGame}>
+                {btnLabel}
+              </Button>
+            </div>
             <SimpleModalWrapped />
           </div>
         </Modal>

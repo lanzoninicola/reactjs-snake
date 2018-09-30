@@ -14,7 +14,7 @@ const SnakeBody = (props) => {
             className={classes.SnakeBody}
             style={style}
         >
-        {props.index}
+        
         </div>
     );
 };
