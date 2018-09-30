@@ -3,11 +3,13 @@ import classes from './GameArea.css'
 import Food from '../../components/Food/Food';
 import Snake from '../Snake/Snake';
 import BottomBar from '../../components/BottomBar/BottomBar';
+import SimpleModalWrapped from '../../components/UI/Modal/Modal';
 
 
 class GameArea extends Component {
     state = {
         gameStatus: "idle",
+        showModal: false,
         foodPosition: [0, 0],
     }
 
@@ -45,23 +47,33 @@ class GameArea extends Component {
     }
 
     pauseGame = () => {
-        this.setState({ gameStatus: "paused" })
+        this.setState({ gameStatus: "paused", showModal: true })
     }
 
     resumeGame = () => {
-        this.setState({ gameStatus: "started" })
+        this.setState({ gameStatus: "started", showModal: false })
     }
 
     stopGame = () => {
         this.setState({ gameStatus: "stopped" })
     }
 
-    setFoodPosition = () => {
-        let xGrid = this.state.gameAreaWidth / 20;
-        let yGrid = this.state.gameAreaHeight / 20;
+    getGridComposition() {
+        const { width, height } = this.state.gameAreaInfo.dimension;
 
-        let x = Math.floor(Math.random() * (xGrid - 1) + 1) * 20;
-        let y = Math.floor(Math.random() * (yGrid - 1) + 1) * 20;
+        let x = width / 20;
+        let y = height / 20;
+
+        let grid = [x, y]
+
+        return grid;
+
+    }
+    setFoodPosition = () => {
+        let grid = this.getGridComposition();
+
+        let x = Math.floor(Math.random() * (grid[0] - 1) + 1) * 20;
+        let y = Math.floor(Math.random() * (grid[1] - 1) + 1) * 20;
 
         let newFoodPosition = [x, y]
 
@@ -71,36 +83,50 @@ class GameArea extends Component {
 
     render() {
 
-        console.log(this.state.gameStatus);
-        const { gameStatus, gameAreaInfo, foodPosition } = this.state;
+        let { gameStatus, gameAreaInfo, foodPosition, showModal } = this.state;
+
+        const btnSetAction = {
+            start: this.startGame,
+            pause: this.pauseGame,
+            resume: this.resumeGame
+        }
+
+
+        console.log(gameStatus, showModal);
 
         return (
             <div className={classes.Container}>
-
-                <div id="gameArea" className={classes.GameArea}>
-
-                    {(gameStatus === "started" || gameStatus === "paused") ?
-                        <Fragment>
-                            <Food
-                                top={foodPosition[0]}
-                                left={foodPosition[1]} />
-                            <Snake
-                                gameAreaInfo={gameAreaInfo}
-                                foodPosition={foodPosition}
-                                setFoodPosition={this.setFoodPosition}
-                                stopGame={this.stopGame}
-                            />
-                        </Fragment>
-                        :
-                        null
+                    {(gameStatus === "paused" && showModal === true) ?
+                        <SimpleModalWrapped 
+                            showModal={showModal}
+                            resumeGame={this.resumeGame}
+                        /> : null
                     }
-                </div>
-                <BottomBar
-                    gameStatus={gameStatus}
-                    btnActionStart={this.startGame}
-                    btnActionPause={this.pauseGame}
-                    btnActionResume={this.resumeGame}
-                />
+                    <Fragment>
+                        <div id="gameArea" className={classes.GameArea}>
+                            {(gameStatus === "started" || gameStatus === "paused") ?
+                                <Fragment>
+                                    <Food
+                                        top={foodPosition[0]}
+                                        left={foodPosition[1]} />
+                                    <Snake
+                                        gameAreaInfo={gameAreaInfo}
+                                        foodPosition={foodPosition}
+                                        setFoodPosition={this.setFoodPosition}
+                                        stopGame={this.stopGame}
+                                    />
+                                </Fragment>
+                                :
+                                null
+                            }
+
+                        </div>
+                        <BottomBar
+                            gameStatus={gameStatus}
+                            btnSetAction={btnSetAction}
+                        />
+                    </Fragment>
+                
             </div>
 
         );

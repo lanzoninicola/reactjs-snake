@@ -18,9 +18,10 @@ class Snake extends Component {
         const { height, width } = this.state.gameAreaInfo.dimension;
 
         if (snake.length > 0 ) {
-            if (snakeHead[0] === 0 || snakeHead[0] === height ||
-                snakeHead[1] === 0 || snakeHead[1] === width) {
+            if (snakeHead[0] < 0 || snakeHead[0] === height ||
+                snakeHead[1] < 0 || snakeHead[1] === width) {
                 this.props.stopGame();
+                //console.log("dead");
             }
         }
 
@@ -161,8 +162,6 @@ class Snake extends Component {
         snake.push(snakeHead);
 
         this.setState({ snakeArray: snake });
-
-        
     }
 
     render() {

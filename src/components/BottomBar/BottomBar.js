@@ -14,26 +14,24 @@ const styles = theme => ({
 
 
 const BottomBar = (props) => {
-  const { classes, gameStatus, btnActionStart, btnActionPause, btnActionResume } = props;
+  const { classes, gameStatus, btnSetAction } = props;
 
-  let startBtnLabel="Start Game";
-  let pauseResumeBtnLabel="Pause"
-  let btnEnableDisabled = false
-  let btnActionPauseResume = btnActionPause;
-
-  if (gameStatus === "started" || gameStatus ==="paused"){
-    btnEnableDisabled=true
+  const setButtonLabel = (btnAction) => {
+    if (btnAction === "start") return "Start Game"
+    if (btnAction === "pause") return "Pause"
+    return null
   }
-  
-  if (gameStatus === "paused"){
-    pauseResumeBtnLabel="Resume";
-    btnActionPauseResume=btnActionResume;
+    
+  const setButtonDisable = (btnAction) => {
+    if (gameStatus === "started" && btnAction === "start") return true
+    if (gameStatus === "idle" && btnAction === "pause") return true
+    return false
   }
 
     return (
         <div>
-            <Button variant="contained" color="primary" className={classes.button} disabled={btnEnableDisabled} onClick={btnActionStart}>{startBtnLabel}</Button>
-            <Button variant="contained" color="primary" className={classes.button} onClick={btnActionPauseResume}>{pauseResumeBtnLabel}</Button>
+            <Button variant="contained" color="primary" className={classes.button} disabled={setButtonDisable("start")} onClick={btnSetAction.start}>{setButtonLabel("start")}</Button>
+            <Button variant="contained" color="primary" className={classes.button} disabled={setButtonDisable("pause")} onClick={btnSetAction.pause}>{setButtonLabel("pause")}</Button>
         </div>
     );
 };
